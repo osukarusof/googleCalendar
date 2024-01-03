@@ -5,6 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Data
 @Builder
@@ -23,4 +27,12 @@ public class User {
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createAt;
+
+    @CreationTimestamp
+    @Column(name = "updated_at", nullable = false, unique = true)
+    private LocalDateTime updatedAt;
 }
