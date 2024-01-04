@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GoogleCalendar {
+public class GoogleCalendarDto {
 
     @NotNull(message = "This field is required")
     @JsonProperty("user_id")
