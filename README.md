@@ -22,7 +22,7 @@ In this project the integration is carried out with the Google Calendar API, wit
 
 - For data persistence, the *H2 database* with files was used, remember that you can have any **database manager** to enter our database we go to the following **url**
 >```http request
->http://localhost:8080/h2-ui
+>GET http://localhost:8080/h2-ui
 >```
 
 - Now we proceed to log in and execute the following **script**
