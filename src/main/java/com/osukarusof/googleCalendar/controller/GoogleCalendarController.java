@@ -1,6 +1,7 @@
 package com.osukarusof.googleCalendar.controller;
 
 import com.osukarusof.googleCalendar.dto.GoogleCalendarDto;
+import com.osukarusof.googleCalendar.dto.ResponseDto;
 import com.osukarusof.googleCalendar.service.GoogleCalendarService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,8 @@ public class GoogleCalendarController {
     private final GoogleCalendarService googleCalendarService;
 
     @GetMapping("/authorize-url")
-    public ResponseEntity<String> authorizeUrl() throws GeneralSecurityException, IOException {
-        return new ResponseEntity<String>(googleCalendarService.authorizeUrl(), HttpStatus.OK);
+    public ResponseEntity<ResponseDto> authorizeUrl() throws GeneralSecurityException, IOException {
+        return new ResponseEntity<ResponseDto>(googleCalendarService.authorizeUrl(), HttpStatus.OK);
     }
 
     @PostMapping("/register-event")

@@ -32,6 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 
+### ###
 /src/main/resources/*.db
 /src/main/resources/*.json
 .DS_Store
