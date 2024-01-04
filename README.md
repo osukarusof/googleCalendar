@@ -53,3 +53,17 @@ In this project the integration is carried out with the Google Calendar API, wit
 >INSERT INTO users (name, emai) values ('aftervery', 'aftervery@osukarusof.com');
 >
 >```
+- If you're using Maven, then edit your project's pom.xml and add this to the <dependencies> section:
+>```xml
+><dependency>
+>   <groupId>com.google.api-client</groupId>
+>   <artifactId>google-api-client</artifactId>
+>   <version>2.2.0</version>
+></dependency>
+>
+><dependency>
+>   <groupId>com.google.apis</groupId>
+>   <artifactId>google-api-services-calendar</artifactId>
+>   <version>v3-rev20220715-2.0.0</version>
+></dependency>
+>```
