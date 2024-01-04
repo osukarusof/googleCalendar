@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+
 @RestController
 @RequestMapping("api/google-calendar")
 @RequiredArgsConstructor
@@ -16,7 +19,7 @@ public class GoogleCalendarController {
     private final GoogleCalendarService googleCalendarService;
 
     @GetMapping("/authorize-url")
-    public ResponseEntity<String> authorizeUrl(){
+    public ResponseEntity<String> authorizeUrl() throws GeneralSecurityException, IOException {
         return new ResponseEntity<String>(googleCalendarService.authorizeUrl(), HttpStatus.OK);
     }
 

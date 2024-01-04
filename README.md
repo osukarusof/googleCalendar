@@ -67,3 +67,10 @@ In this project the integration is carried out with the Google Calendar API, wit
 >   <version>v3-rev20220715-2.0.0</version>
 ></dependency>
 >```
+
+- The following settings must be added in our **application.properties** file
+>```properties
+># GOOGLE CALENDAR configuration
+>google.calendar.credentials.file.path= # You must enter the location of the credentials
+>google.calendar.redirect.url= # Place the redirect url that I placed in the google clound configuration
+>```
