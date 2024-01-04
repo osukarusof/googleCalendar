@@ -1,4 +1,4 @@
-package integration;
+package com.osukarusof.googleCalendar.integration;
 
 import org.springframework.stereotype.Component;
 

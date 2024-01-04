@@ -1,6 +1,6 @@
-package repository;
+package com.osukarusof.googleCalendar.repository;
 
-import entity.UserToken;
+import com.osukarusof.googleCalendar.entity.UserToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

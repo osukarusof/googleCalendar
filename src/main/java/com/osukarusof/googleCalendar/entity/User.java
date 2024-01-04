@@ -1,4 +1,4 @@
-package entity;
+package com.osukarusof.googleCalendar.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

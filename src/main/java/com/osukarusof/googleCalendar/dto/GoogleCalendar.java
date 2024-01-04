@@ -1,4 +1,4 @@
-package dto;
+package com.osukarusof.googleCalendar.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;

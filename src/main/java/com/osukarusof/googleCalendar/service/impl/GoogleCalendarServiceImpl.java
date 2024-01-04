@@ -1,7 +1,7 @@
-package service.impl;
+package com.osukarusof.googleCalendar.service.impl;
 
+import com.osukarusof.googleCalendar.service.GoogleCalendarService;
 import org.springframework.stereotype.Service;
-import service.GoogleCalendarService;
 
 @Service
 public class GoogleCalendarServiceImpl implements GoogleCalendarService {
