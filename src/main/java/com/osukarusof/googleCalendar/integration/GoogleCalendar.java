@@ -1,5 +1,6 @@
 package com.osukarusof.googleCalendar.integration;
 
+import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
@@ -31,6 +32,12 @@ public class GoogleCalendar {
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR_EVENTS);
 
+    /**
+     * It returns the url for authorization
+     * @return
+     * @throws GeneralSecurityException
+     * @throws IOException
+     */
     public String authorizeUrl () throws GeneralSecurityException, IOException {
 
         return authorizationFlow()
@@ -39,6 +46,9 @@ public class GoogleCalendar {
                 .build();
     }
 
+    public String regitserEvent(){
+        return null;
+    }
 
     /**
      * Allows us to return authorization flows
@@ -62,5 +72,9 @@ public class GoogleCalendar {
                 SCOPES)
                 .setAccessType("offline")
                 .build();
+    }
+    
+    private Credential getCredentials() {
+        return  null;
     }
 }

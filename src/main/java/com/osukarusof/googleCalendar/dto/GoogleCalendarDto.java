@@ -1,5 +1,7 @@
 package com.osukarusof.googleCalendar.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -27,9 +29,11 @@ public class GoogleCalendarDto {
 
     @NotNull(message = "This field is required")
     @JsonProperty("start_date_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime startDateTime;
 
     @NotNull(message = "This field is required")
     @JsonProperty("end_date_time")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime endDateTime;
 }

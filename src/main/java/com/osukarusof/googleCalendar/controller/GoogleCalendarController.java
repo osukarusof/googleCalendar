@@ -25,10 +25,9 @@ public class GoogleCalendarController {
     }
 
     @PostMapping("/register-event")
-    public ResponseEntity<String> registerEvent(@Valid
-                                                @RequestBody GoogleCalendarDto googleCalendar,
-                                                @RequestParam("code") String code
+    public ResponseEntity<ResponseDto> registerEvent(@RequestParam("code") String code,
+                                                @RequestBody @Valid GoogleCalendarDto googleCalendar
     ){
-        return new ResponseEntity<String>("hola", HttpStatus.OK);
+        return new ResponseEntity<ResponseDto>(googleCalendarService.registerEvent(googleCalendar), HttpStatus.OK);
     }
 }
