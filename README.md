@@ -32,7 +32,7 @@ In this project the integration is carried out with the Google Calendar API, wit
 >CREATE TABLE users (
 >   id INT NOT NULL AUTO_INCREMENT,
 >   name VARCHAR(250) NOT NULL,
->   emai VARCHAR(250) NOT NULL ,
+>   email VARCHAR(250) NOT NULL ,
 >   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 >   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 >);
@@ -41,7 +41,6 @@ In this project the integration is carried out with the Google Calendar API, wit
 >CREATE TABLE user_tokens (
 >   id INT NOT NULL AUTO_INCREMENT,
 >   user_id INT NOT NULL,
->   google_user_id VARCHAR(100) NOT NULL,
 >   token TEXT NOT NULL,
 >   refresh_token TEXT NOT NULL,
 >   expiry_time_seconds INT NOT NULL,
@@ -50,7 +49,7 @@ In this project the integration is carried out with the Google Calendar API, wit
 >);
 >
 >-- INSERT DATA TABLE USERS
->INSERT INTO users (name, emai) values ('aftervery', 'aftervery@osukarusof.com');
+>INSERT INTO users (name, email) values ('aftervery', 'aftervery@osukarusof.com');
 >
 >```
 - If you're using Maven, then edit your project's pom.xml and add this to the <dependencies> section:

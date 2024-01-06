@@ -18,11 +18,8 @@ import java.time.LocalDateTime;
 public class UserToken {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false, name = "google_user_id", unique = true)
-    private String googleUserId;
 
     @Column(nullable = false, name = "token")
     private String token;
@@ -41,7 +38,7 @@ public class UserToken {
     @Column(name = "updated_at", nullable = false, unique = true)
     private LocalDateTime updatedAt;
 
-    @OneToOne()
+    @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 }

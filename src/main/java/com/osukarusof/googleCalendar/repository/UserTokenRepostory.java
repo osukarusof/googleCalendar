@@ -10,7 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface UserTokenRepostory extends JpaRepository<UserToken, Long> {
-
     @Query(value = "SELECT '*' FROM UserToken ut WHERE ut.user.id = :userId")
     Optional<UserToken> findByUserId(@Param("userId") Long userId);
 }

@@ -181,19 +181,15 @@ public class GoogleCalendar {
             throw new NotFoundException("No token was generated for google calendar");
         }
 
-        String tokenUserId = tokenResponse.parseIdToken().getPayload().getSubject();
-
-        UserToken userToken = UserToken
-                .builder()
-                .token(tokenResponse.getAccessToken())
-                .refreshToken(tokenResponse.getRefreshToken())
-                .googleUserId(tokenUserId)
-                .user(user)
-                .build();
+        UserToken userToken = new UserToken();
+        userToken.setToken(tokenResponse.getAccessToken());
+        userToken.setRefreshToken(tokenResponse.getRefreshToken());
+        userToken.setExpiryTimeSeconds(tokenResponse.getExpiresInSeconds());
+        userToken.setUser(user);
 
         userTokenRepostory.save(userToken);
 
-        return authorizationFlow().createAndStoreCredential(tokenResponse, tokenUserId);
+        return authorizationFlow().createAndStoreCredential(tokenResponse, null);
     }
 
     private Credential generateTokenwithoutCodeAuthorization(UserToken userToken){
