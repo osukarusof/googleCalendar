@@ -9,5 +9,5 @@ import java.security.GeneralSecurityException;
 public interface GoogleCalendarService {
     public ResponseDto authorizeUrl() throws GeneralSecurityException, IOException;
 
-    public ResponseDto registerEvent(GoogleCalendarDto googleCalendarDto, String code);
+    public ResponseDto registerEvent(GoogleCalendarDto googleCalendarDto, String code) throws GeneralSecurityException, IOException;
 }

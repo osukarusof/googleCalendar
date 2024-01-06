@@ -21,7 +21,7 @@ import com.osukarusof.googleCalendar.exception.InternalServerError;
 import com.osukarusof.googleCalendar.exception.NotFoundException;
 import com.osukarusof.googleCalendar.repository.UserRepository;
 import com.osukarusof.googleCalendar.repository.UserTokenRepostory;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class GoogleCalendar {
 
@@ -181,17 +181,19 @@ public class GoogleCalendar {
             throw new NotFoundException("No token was generated for google calendar");
         }
 
+        String tokenUserId = tokenResponse.parseIdToken().getPayload().getSubject();
+
         UserToken userToken = UserToken
                 .builder()
                 .token(tokenResponse.getAccessToken())
                 .refreshToken(tokenResponse.getRefreshToken())
-                .googleUserId("gh")
+                .googleUserId(tokenUserId)
                 .user(user)
                 .build();
 
         userTokenRepostory.save(userToken);
 
-        return authorizationFlow().createAndStoreCredential(tokenResponse, null);
+        return authorizationFlow().createAndStoreCredential(tokenResponse, tokenUserId);
     }
 
     private Credential generateTokenwithoutCodeAuthorization(UserToken userToken){
@@ -202,8 +204,9 @@ public class GoogleCalendar {
      * It allows us to validate if the user exists
      * @param userId
      * @return User
+     * @throws NotFoundException
      */
-    private User getUser(Long userId){
+    private User getUser(Long userId) throws NotFoundException{
         Optional<User> optUser = userRepository.findById(userId);
         if(optUser.isEmpty()){
             throw new NotFoundException("Username does not exist");

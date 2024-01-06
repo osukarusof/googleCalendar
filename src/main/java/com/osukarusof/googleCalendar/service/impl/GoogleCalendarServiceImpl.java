@@ -1,5 +1,6 @@
 package com.osukarusof.googleCalendar.service.impl;
 
+import com.google.api.services.calendar.model.Event;
 import com.osukarusof.googleCalendar.dto.GoogleCalendarDto;
 import com.osukarusof.googleCalendar.dto.ResponseDto;
 import com.osukarusof.googleCalendar.entity.User;
@@ -20,8 +21,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GoogleCalendarServiceImpl implements GoogleCalendarService {
 
-    private final UserRepository userRepository;
-
     private  final GoogleCalendar googleCalendar;
     @Override
     public ResponseDto authorizeUrl() throws GeneralSecurityException, IOException {
@@ -37,13 +36,15 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     }
 
     @Override
-    public ResponseDto registerEvent(GoogleCalendarDto googleCalendarDto, String code) {
+    public ResponseDto registerEvent(GoogleCalendarDto googleCalendarDto, String code) throws GeneralSecurityException, IOException {
+
+        Event register = googleCalendar.registerGoogleCalendarEvent(googleCalendarDto, code);
 
         return ResponseDto
                 .builder()
                 .code(HttpStatus.OK.value())
                 .message("The event was successfully registered")
-                .data(null)
+                .data(register)
                 .build();
     }
 }

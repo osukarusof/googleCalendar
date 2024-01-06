@@ -27,7 +27,7 @@ public class GoogleCalendarController {
     @PostMapping("/register-event")
     public ResponseEntity<ResponseDto> registerEvent(@RequestParam("code") String code,
                                                 @RequestBody @Valid GoogleCalendarDto googleCalendar
-    ){
+    ) throws GeneralSecurityException, IOException {
         return new ResponseEntity<ResponseDto>(googleCalendarService.registerEvent(googleCalendar, code), HttpStatus.OK);
     }
 }
