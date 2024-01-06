@@ -46,9 +46,7 @@ public class GoogleCalendar {
                 .build();
     }
 
-    public String regitserEvent(){
-        return null;
-    }
+    /**** FUNCTIONS NECESSARY FOR IMPLEMENTATION ****/
 
     /**
      * Allows us to return authorization flows
@@ -73,8 +71,5 @@ public class GoogleCalendar {
                 .setAccessType("offline")
                 .build();
     }
-    
-    private Credential getCredentials() {
-        return  null;
-    }
+
 }

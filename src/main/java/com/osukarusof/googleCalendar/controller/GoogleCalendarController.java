@@ -28,6 +28,6 @@ public class GoogleCalendarController {
     public ResponseEntity<ResponseDto> registerEvent(@RequestParam("code") String code,
                                                 @RequestBody @Valid GoogleCalendarDto googleCalendar
     ){
-        return new ResponseEntity<ResponseDto>(googleCalendarService.registerEvent(googleCalendar), HttpStatus.OK);
+        return new ResponseEntity<ResponseDto>(googleCalendarService.registerEvent(googleCalendar, code), HttpStatus.OK);
     }
 }

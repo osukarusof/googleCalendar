@@ -40,15 +40,12 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     }
 
     @Override
-    public ResponseDto registerEvent(GoogleCalendarDto googleCalendarDto) {
+    public ResponseDto registerEvent(GoogleCalendarDto googleCalendarDto, String code) {
 
         Optional<User> optUser = userRepository.findById(googleCalendarDto.getUserId());
-
         if(optUser.isEmpty()){
             return  null;
         }
-
-        googleCalendar.regitserEvent();
 
         return ResponseDto
                 .builder()
