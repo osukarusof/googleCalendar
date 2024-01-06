@@ -43,16 +43,16 @@ import java.util.Optional;
 public class GoogleCalendar {
 
     @Value("${google.calendar.credentials.file.path}")
-    private static String CREDENTIALS_FILE_PATH;
+    private String CREDENTIALS_FILE_PATH;
 
     @Value("${google.calendar.redirect.url}")
-    private static String  REDIRECT_URL;
+    private String  REDIRECT_URL;
 
     @Value("${google.calendar.id}")
-    private static String calendarId;
+    private String calendarId;
 
     @Value("${google.calendar.application.name}")
-    private static String APPLICATION_NAME;
+    private String APPLICATION_NAME;
 
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
