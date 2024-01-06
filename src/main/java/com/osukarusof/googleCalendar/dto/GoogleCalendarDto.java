@@ -28,6 +28,9 @@ public class GoogleCalendarDto {
     private String description;
 
     @NotNull(message = "This field is required")
+    private String location;
+
+    @NotNull(message = "This field is required")
     @JsonProperty("start_date_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime startDateTime;

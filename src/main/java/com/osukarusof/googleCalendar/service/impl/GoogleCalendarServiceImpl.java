@@ -25,11 +25,8 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     private  final GoogleCalendar googleCalendar;
     @Override
     public ResponseDto authorizeUrl() throws GeneralSecurityException, IOException {
-
-        String url = googleCalendar.authorizeUrl();
-
         Map<String, String> responseMap = new HashMap<String, String>();
-        responseMap.put("url", url);
+        responseMap.put("url", googleCalendar.authorizeUrl());
 
         return ResponseDto
                 .builder()
@@ -41,11 +38,6 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
 
     @Override
     public ResponseDto registerEvent(GoogleCalendarDto googleCalendarDto, String code) {
-
-        Optional<User> optUser = userRepository.findById(googleCalendarDto.getUserId());
-        if(optUser.isEmpty()){
-            return  null;
-        }
 
         return ResponseDto
                 .builder()

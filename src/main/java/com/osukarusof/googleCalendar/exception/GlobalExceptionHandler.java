@@ -23,7 +23,43 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
-    private final ObjectMapper objectMapper;
+    @ExceptionHandler(InternalServerError.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ResponseDto> handleException (InternalServerError ex){
+
+        ResponseDto responseDto = ResponseDto
+                .builder()
+                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .message(ex.getMessage())
+                .build();
+
+        return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ResponseDto> handleNotFoundException (NotFoundException ex){
+        ResponseDto responseDto = ResponseDto
+                .builder()
+                .code(HttpStatus.NOT_FOUND.value())
+                .message(ex.getMessage())
+                .data(null)
+                .build();
+        return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ResponseDto> handleBadRequestException(BadRequestException ex){
+
+        ResponseDto responseDto = ResponseDto
+                .builder()
+                .code(HttpStatus.BAD_REQUEST.value())
+                .message(ex.getMessage())
+                .build();
+
+        return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -44,4 +80,5 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(responseDto, HttpStatus.BAD_REQUEST);
     }
+
 }
