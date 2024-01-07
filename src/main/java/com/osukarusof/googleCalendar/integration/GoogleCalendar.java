@@ -1,11 +1,15 @@
 package com.osukarusof.googleCalendar.integration;
 
+import ch.qos.logback.core.joran.util.beans.BeanDescriptionFactory;
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.auth.oauth2.TokenResponseException;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.DateTime;
@@ -192,8 +196,21 @@ public class GoogleCalendar {
         return authorizationFlow().createAndStoreCredential(tokenResponse, null);
     }
 
-    private Credential generateTokenwithoutCodeAuthorization(UserToken userToken){
-        return null;
+    private Credential generateTokenwithoutCodeAuthorization(UserToken userToken) throws GeneralSecurityException, IOException {
+
+        TokenResponse tokenResponse = new TokenResponse();
+        tokenResponse.setAccessToken(userToken.getToken());
+        tokenResponse.setRefreshToken(userToken.getRefreshToken());
+        tokenResponse.setExpiresInSeconds(userToken.getExpiryTimeSeconds());
+
+        Credential credential = authorizationFlow().createAndStoreCredential(tokenResponse, null);
+
+        if(credential.getExpiresInSeconds() <= 60){
+            credential.refreshToken();
+        }
+
+
+        return credential;
     }
 
     /**
