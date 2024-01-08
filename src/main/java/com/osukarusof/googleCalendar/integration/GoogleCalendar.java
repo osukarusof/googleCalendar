@@ -1,7 +1,7 @@
 package com.osukarusof.googleCalendar.integration;
 
-import ch.qos.logback.core.joran.util.beans.BeanDescriptionFactory;
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.auth.oauth2.RefreshTokenRequest;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.auth.oauth2.TokenResponseException;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
@@ -9,7 +9,6 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.HttpExecuteInterceptor;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.client.util.DateTime;
@@ -17,6 +16,7 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
+import com.google.common.collect.ImmutableList;
 import com.osukarusof.googleCalendar.dto.GoogleCalendarDto;
 import com.osukarusof.googleCalendar.entity.User;
 import com.osukarusof.googleCalendar.entity.UserToken;
@@ -30,11 +30,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.security.GeneralSecurityException;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Date;
@@ -198,17 +196,34 @@ public class GoogleCalendar {
 
     private Credential generateTokenwithoutCodeAuthorization(UserToken userToken) throws GeneralSecurityException, IOException {
 
+        Credential credential = null;
+
         TokenResponse tokenResponse = new TokenResponse();
         tokenResponse.setAccessToken(userToken.getToken());
         tokenResponse.setRefreshToken(userToken.getRefreshToken());
         tokenResponse.setExpiresInSeconds(userToken.getExpiryTimeSeconds());
 
-        Credential credential = authorizationFlow().createAndStoreCredential(tokenResponse, null);
+        try {
+            credential = authorizationFlow().createAndStoreCredential(tokenResponse, null);
 
-        if(credential.getExpiresInSeconds() <= 60){
-            credential.refreshToken();
+            if (credential.getExpiresInSeconds() < 60) {
+                credential.refreshToken();
+                UserToken userToken_update = new UserToken();
+                userToken_update.setId(userToken.getId());
+                userToken_update.setToken(credential.getAccessToken());
+                userToken_update.setRefreshToken(credential.getRefreshToken());
+                userToken_update.setExpiryTimeSeconds(credential.getExpiresInSeconds());
+                userToken_update.setUser(userToken.getUser());
+
+                userTokenRepostory.save(userToken_update);
+            }
+        }catch (Exception ex){
+            log.error("oops there was an error generating the credentials", ex);
         }
 
+        if(credential == null){
+            throw new NotFoundException("No credential was generated");
+        }
 
         return credential;
     }
