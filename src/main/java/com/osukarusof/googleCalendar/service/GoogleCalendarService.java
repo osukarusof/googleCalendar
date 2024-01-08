@@ -11,5 +11,7 @@ public interface GoogleCalendarService {
 
     public ResponseDto registerEvent(GoogleCalendarDto googleCalendarDto, String code) throws GeneralSecurityException, IOException;
 
+    public ResponseDto updateEvent(Long calendarUserId, GoogleCalendarDto googleCalendarDto) throws GeneralSecurityException, IOException;
+
     public ResponseDto deleteEvent(Long calendarUserId) throws GeneralSecurityException, IOException;
 }

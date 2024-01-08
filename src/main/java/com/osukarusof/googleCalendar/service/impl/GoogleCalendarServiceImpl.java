@@ -49,6 +49,19 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
     }
 
     @Override
+    public ResponseDto updateEvent(Long calendarUserId, GoogleCalendarDto googleCalendarDto) throws GeneralSecurityException, IOException {
+
+        Event update = googleCalendar.updateGoogleCalendarEvent(calendarUserId, googleCalendarDto);
+
+        return ResponseDto
+                .builder()
+                .code(HttpStatus.OK.value())
+                .message("The event was successfully updated")
+                .data(update)
+                .build();
+    }
+
+    @Override
     public ResponseDto deleteEvent(Long calendarUserId) throws GeneralSecurityException, IOException {
 
         googleCalendar.deleteGoogleCalendarEvent(calendarUserId);

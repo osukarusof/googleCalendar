@@ -31,6 +31,14 @@ public class GoogleCalendarController {
         return new ResponseEntity<ResponseDto>(googleCalendarService.registerEvent(googleCalendar, code), HttpStatus.OK);
     }
 
+    @PutMapping("/update-event/{calendar_user_id}")
+    public ResponseEntity<ResponseDto> updateEvent(
+            @PathVariable("calendar_user_id") Long calendarUserId,
+            @RequestBody @Valid GoogleCalendarDto googleCalendar
+    ) throws GeneralSecurityException, IOException {
+        return new ResponseEntity<ResponseDto>(googleCalendarService.updateEvent(calendarUserId, googleCalendar), HttpStatus.OK);
+    }
+
     @DeleteMapping("/delete-event/{calendar_user_id}")
     public ResponseEntity<ResponseDto> deleteEvent(
             @PathVariable("calendar_user_id") Long calendarUserId

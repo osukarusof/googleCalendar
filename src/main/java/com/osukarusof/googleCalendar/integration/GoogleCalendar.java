@@ -113,6 +113,46 @@ public class GoogleCalendar {
         return registerEvent;
     }
 
+
+    public  Event updateGoogleCalendarEvent(Long calendarUserId, GoogleCalendarDto googleCalendarDto) throws GeneralSecurityException, IOException {
+
+        Optional<CalendarUser> optCalendarUser = calendaruserRepository.findById(calendarUserId);
+        if(optCalendarUser.isEmpty()){
+            throw new NotFoundException("Calendar event does not exist");
+        }
+
+        Event event = new Event()
+                .setSummary(googleCalendarDto.getTitle())
+                .setLocation(googleCalendarDto.getLocation())
+                .setDescription(googleCalendarDto.getDescription());
+
+        Date startDate = Date.from(googleCalendarDto.getStartDateTime().atZone(ZoneId.systemDefault()).toInstant());
+        DateTime startDateTime = new DateTime(startDate);
+        EventDateTime start = new EventDateTime().setDateTime(startDateTime).setTimeZone("UTC");
+        event.setStart(start);
+
+        Date endDate = Date.from(googleCalendarDto.getEndDateTime().atZone(ZoneId.systemDefault()).toInstant());
+        DateTime endDateTime = new DateTime(endDate);
+        EventDateTime end = new EventDateTime().setDateTime(endDateTime).setTimeZone("UTC");
+        event.setEnd(end);
+
+        Event updateEvent = calendarService(null, googleCalendarDto.getUserId())
+                .events()
+                .update(calendarId, optCalendarUser.get().getGoogleCalendarId(),  event)
+                .execute();
+
+        CalendarUser calendarUser = new CalendarUser();
+        calendarUser.setId(optCalendarUser.get().getId());
+        calendarUser.setGoogleCalendarId(updateEvent.getId());
+        calendarUser.setStartDateTime(googleCalendarDto.getStartDateTime());
+        calendarUser.setEndDateTime(googleCalendarDto.getEndDateTime());
+        calendarUser.setUser(optCalendarUser.get().getUser());
+
+        calendaruserRepository.save(calendarUser);
+
+        return updateEvent;
+    }
+
     public void deleteGoogleCalendarEvent(Long calendarUserId) throws GeneralSecurityException, IOException {
 
          Optional<CalendarUser> optCalendarUser = calendaruserRepository.findById(calendarUserId);
