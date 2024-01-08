@@ -48,6 +48,16 @@ In this project the integration is carried out with the Google Calendar API, wit
 >updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 >);
 >
+>CREATE TABLE calendar_user (
+>   id INT NOT NULL AUTO_INCREMENT,
+>   user_id INT NOT NULL,
+>   google_calendar_id VARCHAR(200) NOT NULL,
+>   start_date_time DATETIME NOT NULL,
+>   end_date_time DATETIME NOT NULL,
+>   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+>   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+>);
+>
 >-- INSERT DATA TABLE USERS
 >INSERT INTO users (name, email) values ('aftervery', 'aftervery@osukarusof.com');
 >

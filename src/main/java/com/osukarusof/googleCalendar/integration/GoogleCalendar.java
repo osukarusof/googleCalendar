@@ -18,11 +18,13 @@ import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
 import com.google.common.collect.ImmutableList;
 import com.osukarusof.googleCalendar.dto.GoogleCalendarDto;
+import com.osukarusof.googleCalendar.entity.CalendarUser;
 import com.osukarusof.googleCalendar.entity.User;
 import com.osukarusof.googleCalendar.entity.UserToken;
 import com.osukarusof.googleCalendar.exception.BadRequestException;
 import com.osukarusof.googleCalendar.exception.InternalServerError;
 import com.osukarusof.googleCalendar.exception.NotFoundException;
+import com.osukarusof.googleCalendar.repository.CalendaruserRepository;
 import com.osukarusof.googleCalendar.repository.UserRepository;
 import com.osukarusof.googleCalendar.repository.UserTokenRepostory;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +58,9 @@ public class GoogleCalendar {
     @Value("${google.calendar.application.name}")
     private String APPLICATION_NAME;
 
+    @Value("${google.calendar.credentials.acces.token.expire.seconds}")
+    private Integer tokenExpiresInSeconds;
+
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
     private static final List<String> SCOPES = Collections.singletonList(CalendarScopes.CALENDAR_EVENTS);
@@ -63,6 +68,8 @@ public class GoogleCalendar {
     private final UserTokenRepostory userTokenRepostory;
 
     private final UserRepository userRepository;
+
+    private final CalendaruserRepository calendaruserRepository;
 
 
     /**
@@ -80,6 +87,8 @@ public class GoogleCalendar {
 
     public Event registerGoogleCalendarEvent(GoogleCalendarDto googleCalendarDto, String code) throws GeneralSecurityException, IOException {
 
+        User user = getUser(googleCalendarDto.getUserId());
+
         Event event = new Event()
                 .setSummary(googleCalendarDto.getTitle())
                 .setLocation(googleCalendarDto.getLocation())
@@ -95,10 +104,20 @@ public class GoogleCalendar {
         EventDateTime end = new EventDateTime().setDateTime(endDateTime).setTimeZone("UTC");
         event.setEnd(end);
 
-        return calendarService(code, googleCalendarDto.getUserId())
+        Event registerEvent = calendarService(code, googleCalendarDto.getUserId())
                 .events()
                 .insert(calendarId, event)
                 .execute();
+
+        CalendarUser calendarUser = new CalendarUser();
+        calendarUser.setGoogleCalendarId(registerEvent.getId());
+        calendarUser.setStartDateTime(googleCalendarDto.getStartDateTime());
+        calendarUser.setEndDateTime(googleCalendarDto.getEndDateTime());
+        calendarUser.setUser(user);
+
+        calendaruserRepository.save(calendarUser);
+
+        return registerEvent;
     }
 
     /**************** FUNCTIONS NECESSARY FOR IMPLEMENTATION ****************/
@@ -194,7 +213,12 @@ public class GoogleCalendar {
         return authorizationFlow().createAndStoreCredential(tokenResponse, null);
     }
 
-    private Credential generateTokenwithoutCodeAuthorization(UserToken userToken) throws GeneralSecurityException, IOException {
+    /**
+     * It allows us to obtain the credentials through the token
+     * @param userToken
+     * @return Credential
+     */
+    private Credential generateTokenwithoutCodeAuthorization(UserToken userToken) {
 
         Credential credential = null;
 
@@ -206,7 +230,7 @@ public class GoogleCalendar {
         try {
             credential = authorizationFlow().createAndStoreCredential(tokenResponse, null);
 
-            if (credential.getExpiresInSeconds() < 60) {
+            if (credential.getExpiresInSeconds() < tokenExpiresInSeconds) {
                 credential.refreshToken();
                 UserToken userToken_update = new UserToken();
                 userToken_update.setId(userToken.getId());
