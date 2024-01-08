@@ -1,12 +1,10 @@
 package com.osukarusof.googleCalendar.integration;
 
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.auth.oauth2.RefreshTokenRequest;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.auth.oauth2.TokenResponseException;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -16,7 +14,6 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
 import com.google.api.services.calendar.model.EventDateTime;
-import com.google.common.collect.ImmutableList;
 import com.osukarusof.googleCalendar.dto.GoogleCalendarDto;
 import com.osukarusof.googleCalendar.entity.CalendarUser;
 import com.osukarusof.googleCalendar.entity.User;
@@ -34,12 +31,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.security.GeneralSecurityException;
-import java.time.Instant;
 import java.time.ZoneId;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -118,6 +111,23 @@ public class GoogleCalendar {
         calendaruserRepository.save(calendarUser);
 
         return registerEvent;
+    }
+
+    public void deleteGoogleCalendarEvent(Long calendarUserId) throws GeneralSecurityException, IOException {
+
+         Optional<CalendarUser> optCalendarUser = calendaruserRepository.findById(calendarUserId);
+         if(optCalendarUser.isEmpty()){
+             throw new NotFoundException("Calendar event does not exist");
+         }
+
+        GoogleCalendarDto googleCalendarDto = GoogleCalendarDto.builder().userId(optCalendarUser.get().getUser().getId()).build();
+
+        calendarService(null, googleCalendarDto.getUserId())
+                .events()
+                .delete(calendarId, optCalendarUser.get().getGoogleCalendarId())
+                .execute();
+
+        calendaruserRepository.delete(optCalendarUser.get());
     }
 
     /**************** FUNCTIONS NECESSARY FOR IMPLEMENTATION ****************/

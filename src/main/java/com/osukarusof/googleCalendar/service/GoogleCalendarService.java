@@ -10,4 +10,6 @@ public interface GoogleCalendarService {
     public ResponseDto authorizeUrl() throws GeneralSecurityException, IOException;
 
     public ResponseDto registerEvent(GoogleCalendarDto googleCalendarDto, String code) throws GeneralSecurityException, IOException;
+
+    public ResponseDto deleteEvent(Long calendarUserId) throws GeneralSecurityException, IOException;
 }

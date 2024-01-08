@@ -30,4 +30,11 @@ public class GoogleCalendarController {
     ) throws GeneralSecurityException, IOException {
         return new ResponseEntity<ResponseDto>(googleCalendarService.registerEvent(googleCalendar, code), HttpStatus.OK);
     }
+
+    @DeleteMapping("/delete-event/{calendar_user_id}")
+    public ResponseEntity<ResponseDto> deleteEvent(
+            @PathVariable("calendar_user_id") Long calendarUserId
+    ) throws GeneralSecurityException, IOException {
+        return new ResponseEntity<ResponseDto>(googleCalendarService.deleteEvent(calendarUserId), HttpStatus.OK);
+    }
 }

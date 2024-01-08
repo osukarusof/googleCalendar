@@ -47,4 +47,16 @@ public class GoogleCalendarServiceImpl implements GoogleCalendarService {
                 .data(register)
                 .build();
     }
+
+    @Override
+    public ResponseDto deleteEvent(Long calendarUserId) throws GeneralSecurityException, IOException {
+
+        googleCalendar.deleteGoogleCalendarEvent(calendarUserId);
+
+        return ResponseDto
+                .builder()
+                .code(HttpStatus.OK.value())
+                .message("event was successfully deleted")
+                .build();
+    }
 }

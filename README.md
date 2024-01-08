@@ -80,6 +80,9 @@ In this project the integration is carried out with the Google Calendar API, wit
 - The following settings must be added in our **application.properties** file
 >```properties
 ># GOOGLE CALENDAR configuration
+>google.calendar.id=# This this is the calendar id
+>google.calendar.application.name=# This is the name of the application we created in google cloud
 >google.calendar.credentials.file.path= # You must enter the location of the credentials
 >google.calendar.redirect.url= # Place the redirect url that I placed in the google clound configuration
+>google.calendar.credentials.acces.token.expire.seconds=# This is the expiration time of the token in seconds
 >```
