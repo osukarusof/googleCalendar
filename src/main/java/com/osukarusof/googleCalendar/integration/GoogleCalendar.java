@@ -31,6 +31,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.security.GeneralSecurityException;
+import java.time.Instant;
 import java.time.ZoneId;
 import java.util.*;
 
@@ -272,15 +273,16 @@ public class GoogleCalendar {
 
         Credential credential = null;
 
-        TokenResponse tokenResponse = new TokenResponse();
+        GoogleTokenResponse tokenResponse = new GoogleTokenResponse();
         tokenResponse.setAccessToken(userToken.getToken());
         tokenResponse.setRefreshToken(userToken.getRefreshToken());
         tokenResponse.setExpiresInSeconds(userToken.getExpiryTimeSeconds());
 
         try {
             credential = authorizationFlow().createAndStoreCredential(tokenResponse, null);
+            Instant expirationTime = Instant.now().plusSeconds(credential.getExpiresInSeconds());
 
-            if (credential.getExpiresInSeconds() < tokenExpiresInSeconds) {
+            if(Instant.now().isAfter(expirationTime)){
                 credential.refreshToken();
                 UserToken userToken_update = new UserToken();
                 userToken_update.setId(userToken.getId());
@@ -290,6 +292,8 @@ public class GoogleCalendar {
                 userToken_update.setUser(userToken.getUser());
 
                 userTokenRepostory.save(userToken_update);
+
+                return credential;
             }
         }catch (Exception ex){
             log.error("oops there was an error generating the credentials", ex);
@@ -298,6 +302,9 @@ public class GoogleCalendar {
         if(credential == null){
             throw new NotFoundException("No credential was generated");
         }
+
+        userToken.setExpiryTimeSeconds(credential.getExpiresInSeconds());
+        userTokenRepostory.save(userToken);
 
         return credential;
     }
