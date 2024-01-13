@@ -18,6 +18,20 @@ In this project the integration is carried out with the Google Calendar API, wit
 - maven 3.9
 - Google Cloud credentials
 
+# Documentation
+- Flowchart used for this development with **Google Calendar**.
+>```mermaid
+>sequenceDiagram
+>   App->>+Api: GET: api/events/auth
+>   Api-->>-App: {authLink: "xxxx"}
+>   App->>+Google: We request authorization
+>   Google-->>-App: Redirect to the page we specify
+>   App->>+Api: POS: {code: "xxx"}
+>   Api->>+GoogleCalendar: The event is sent
+>   GoogleCalendar-->>-Api: Response 200/400
+>   Api-->>-App: Response 200/400
+>```
+
 # Installation
 
 - For data persistence, the *H2 database* with files was used, remember that you can have any **database manager** to enter our database we go to the following **url**
@@ -51,7 +65,6 @@ In this project the integration is carried out with the Google Calendar API, wit
 >CREATE TABLE calendar_user (
 >   id INT NOT NULL AUTO_INCREMENT,
 >   user_id INT NOT NULL,
->   google_calendar_id VARCHAR(200) NOT NULL,
 >   start_date_time DATETIME NOT NULL,
 >   end_date_time DATETIME NOT NULL,
 >   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
